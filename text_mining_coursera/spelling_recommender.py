@@ -17,46 +17,71 @@ For every misspelled word, the recommender should find find the word in correct_
 Each of the recommenders should provide recommendations for the three default words provided: ['cormulent', 'incendenece', 'validrate'].
 """
 
-import os
+
 import nltk
 import operator
-import pandas as pd
-import numpy as np
-from nltk.stem import WordNetLemmatizer
-from collections import defaultdict
-from collections import Counter
+import time
 from nltk.corpus import words
+
+nltk.download('words')
 
 correct_spellings = words.words()
 
 """Question 9
-For this recommender, your function should provide recommendations for the three default words provided above using the following distance metric:
-
+For this recommender, your function should provide recommendations for the 
+three default words provided above using the following distance metric:
 Jaccard distance on the trigrams of the two words.
-
-This function should return a list of length three: ['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
+This function should return a list of length three: 
+['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
 """
 
-def answer_nine(entries=['cormulent', 'incendenece', 'validrate']):
-    
-    
-    return # Your answer here
-    
-answer_nine()
+entries=['cormulent', 'incendenece', 'validrate']
+result = []
+for entry in entries:
+    spell_list = [spell for spell in correct_spellings if spell.startswith(entry[0]) and len(spell) > 2]
+    distance_list = [(spell, nltk.jaccard_distance(set(nltk.ngrams(entry, n=3)), 
+                                                   set(nltk.ngrams(spell, n=3)))) for spell in spell_list]
+    result.append(sorted(distance_list, key=operator.itemgetter(1))[0][0])
 
+result2 = []
+for entry in entries:
+    spell_list = [spell for spell in correct_spellings if len(spell) > 2]
+    distance_list = [(spell, nltk.jaccard_distance(set(nltk.ngrams(entry, n=3)), 
+                                                   set(nltk.ngrams(spell, n=3)))) for spell in spell_list]
+    result2.append(sorted(distance_list, key=operator.itemgetter(1))[0][0])
+#result2 = ['formule', 'ascendence', 'validate']
 
 """Question 10
-For this recommender, your function should provide recommendations for the three default words provided above using the following distance metric:
-
+For this recommender, your function should provide recommendations for the 
+three default words provided above using the following distance metric:
 Jaccard distance on the 4-grams of the two words.
-
-This function should return a list of length three: ['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
+This function should return a list of length three: 
+['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
 """
+
+entries=['cormulent', 'incendenece', 'validrate']
+result = []
+for entry in entries:
+    spell_list = [spell for spell in correct_spellings if spell.startswith(entry[0]) and len(spell) > 2]
+    distance_list = [(spell, nltk.jaccard_distance(set(nltk.ngrams(entry, n=4)), 
+                                                   set(nltk.ngrams(spell, n=4)))) for spell in spell_list]
+    result.append(sorted(distance_list, key=operator.itemgetter(1))[0][0])
+
 
 """Question 11
-For this recommender, your function should provide recommendations for the three default words provided above using the following distance metric:
-
+For this recommender, your function should provide recommendations for the 
+three default words provided above using the following distance metric:
 Edit distance on the two words with transpositions.
-
-This function should return a list of length three: ['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
+This function should return a list of length three: 
+['cormulent_reccomendation', 'incendenece_reccomendation', 'validrate_reccomendation'].
 """
+
+start = time.time()
+entries=['cormulent', 'incendenece', 'validrate']
+result = []
+for entry in entries:
+    spell_list = [spell for spell in correct_spellings if spell.startswith(entry[0]) and len(spell) > 2]
+    distance_list = [(spell, nltk.edit_distance(entry, spell, transpositions=True)) for spell in spell_list]
+    result.append(sorted(distance_list, key=operator.itemgetter(1))[0][0])
+end = time.time() - start
+    

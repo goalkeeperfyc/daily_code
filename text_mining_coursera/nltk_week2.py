@@ -16,6 +16,7 @@ from nltk.stem import WordNetLemmatizer
 from collections import defaultdict
 from collections import Counter
 
+#download
 nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
